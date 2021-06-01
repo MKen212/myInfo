@@ -1,0 +1,28 @@
+{
+  "name": "myinfo",
+  "version": "1.0.0",
+  "description": "My Info Browser Extension",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "watch": "webpack -- watch",
+    "build": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MKen212/myInfo.git"
+  },
+  "author": "Malarena SA",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/MKen212/myInfo/issues"
+  },
+  "homepage": "https://github.com/MKen212/myInfo#readme",
+  "devDependencies": {
+    "webpack": "^5.38.1",
+    "webpack-cli": "^4.7.0"
+  },
+  "dependencies": {
+    "axios": "^0.21.1"
+  }
+}

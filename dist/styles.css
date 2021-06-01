@@ -1,0 +1,29 @@
+/* MyInfo CSS */
+
+body {
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  min-width: 300px;
+}
+
+.header {
+  margin: 30px auto;
+  text-align: center;
+}
+
+.btn {
+  margin: 20px auto;
+}
+
+.form {
+  text-align: center;
+  visibility: visible;
+}
+
+.input {
+  width: 50px;
+}
+
+.results-container {
+  text-align: center;
+  visibility: hidden;
+}

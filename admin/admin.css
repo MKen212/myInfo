@@ -1,0 +1,50 @@
+/* MyInfo Admin CSS */
+
+body {
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
+
+.header {
+  margin: 30px auto;
+  text-align: center;
+}
+
+.messages {
+  width: 60%;
+  margin: 30px auto;
+  padding: 10px;
+  text-align: center;
+  border: 1px solid black;
+}
+
+.msg-success {
+  color: green;
+}
+
+.msg-info {
+  color: blue;
+}
+
+.msg-error {
+  color: red;
+}
+
+.btn-container {
+  text-align: center;
+}
+
+.results {
+  text-align: center;
+}
+
+table, th, td {
+  border: 1px solid black;
+  border-collapse: collapse;
+  padding: 5px;
+}
+
+.table-centred {
+  max-height: 100px;
+  margin: 30px auto;
+
+}

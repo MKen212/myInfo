@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="description" content="MyInfo Browser Extension" />
+  <meta name="keywords" content="Browser Extension API" />
+  <meta name="author" content="Malarena SA" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <title>My Info</title>
+
+  <!-- stylesheet -->
+  <link rel="stylesheet" href="./styles.css" />
+</head>
+<body>
+  <main class="container">
+    <header class="header">
+      <h1>My Info Browser Extension</h1>
+    </header>
+
+    <!-- Form -->
+    <form class="form">
+      <div>
+        <h3>Add/Update Your Information</h3>
+      </div>
+      <div>
+        <label for="crypto1">Crypto 1</label>
+        <input type="text" class="input" id="crypto1" required />
+        <label for="currency1">Currency 1</label>
+        <input type="text" class="input" id="currency1" required />
+      </div>
+      <div>
+        <label for="crypto2">Crypto 2</label>
+        <input type="text" class="input" id="crypto2" required />
+        <label for="currency2">Currency 2</label>
+        <input type="text" class="input" id="currency2" required />
+      </div>
+      <div class="btn">
+        <button type="submit">Submit</button>
+      </div>
+    </form>
+
+    <!-- Results -->
+    <div class="results-container">
+      <div class="results">
+        <h2>Current Prices:</h2>
+        <p>ETH > USD: $2,109.00</p>
+        <p>XRP > USD: $1.02</p>
+      </div>
+      <div class="btn">
+        <button type="reset" id="resetBtn">Reset</button>
+      </div>
+    </div>
+  </main>
+
+  <!-- javascript -->
+  <script src="./main.js"></script>
+  
+</body>
+</html>
