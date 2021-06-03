@@ -16,7 +16,7 @@ body {
 
 .form {
   text-align: center;
-  visibility: visible;
+  display: block;
 }
 
 .input {
@@ -25,5 +25,17 @@ body {
 
 .results-container {
   text-align: center;
-  visibility: hidden;
+  display: none;
+}
+
+.messages {
+  text-align: center;
+}
+
+.msg-info {
+  color: blue;
+}
+
+.msg-error {
+  color: red;
 }

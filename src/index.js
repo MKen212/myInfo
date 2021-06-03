@@ -1,6 +1,6 @@
 "use strict";
 
-/* TO REMOVE
+/* Overview of local storage values stored in object
 const myInfo = {
   "crypto1": "eth",
   "currency1": "usd",
@@ -10,11 +10,15 @@ const myInfo = {
 localStorage.setItem("myInfo", JSON.stringify(myInfo));
 */
 
+
 // Import axios as the HTTP request handler
 import axios from "../node_modules/axios";
 
 // Get Console Log Background Page
 const bkg = chrome.extension.getBackgroundPage();
+
+// Initialise Price Data
+let priceData = [];
 
 // Get the HTML elements to manipulate
 // Form Fields
@@ -29,6 +33,9 @@ const resultsDiv = document.querySelector(".results-container");
 const results = document.querySelector(".results");
 const resetBtn = document.getElementById("resetBtn");
 
+// Messages
+const messagesDiv = document.querySelector(".messages");
+
 // Add submit event listener to form
 form.addEventListener("submit", (event) => handleSubmit(event));
 
@@ -37,22 +44,105 @@ resetBtn.addEventListener("click", (event) => reset(event));
 
 // Initialise Function
 function init() {
-  // Get Data from local storage
-  let storedData = localStorage.getItem("myInfo") ?
+  // Get Data from local storage or blank object
+  const storedData = localStorage.getItem("myInfo") ?
     JSON.parse(localStorage.getItem("myInfo")) :
     {};
   
   // If no stored data show form, else get data and show results
-  if (!storedData) {
-    form.style.visibility = "visible";
-    resultsDiv.style.visibility = "hidden";
+  if (Object.keys(storedData).length === 0) {
+    form.style.display = "block";
+    resultsDiv.style.display = "none";
   } else {
-    form.style.visibility = "hidden";
-    resultsDiv.style.visibility = "visible";
+    form.style.display = "none";
+    resultsDiv.style.display = "block";
+    displayInfo(storedData);
   }
+}
+
+// Function to handle for submit
+function handleSubmit(event) {
+  event.preventDefault();
+  // Prepare input data and store to Local Storage
+  const myInfo = {
+    "crypto1": crypto1.value.toLowerCase(),
+    "currency1": currency1.value.toLowerCase(),
+    "crypto2": crypto2.value.toLowerCase(),
+    "currency2": currency2.value.toLowerCase(),
+  };
+  localStorage.setItem("myInfo", JSON.stringify(myInfo));
+  // Get Data and show results
+  form.style.display = "none";
+  resultsDiv.style.display = "block";
+  displayInfo(myInfo);
+}
+
+// Function to reset the stored data
+function reset(event) {
+  event.preventDefault();
+  localStorage.removeItem("myInfo");
+  init();
+}
+
+// Function to Get and Display the Info
+async function displayInfo(data) {
+  try {
+    displayMessage("Working...", "info");
+    await getPrice(data.crypto1, data.currency1);
+    await getPrice(data.crypto2, data.currency2);
+    // bkg.console.log(priceData);
+    // UP TO HERE
+  } catch (error) {
+    bkg.console.log(error);
+    displayMessage(error, "error");
+  }
+}
+
+
+
+// Function to get the current  Crypto:Currency Price
+async function getPrice(crypto, currency) {
+  try {
+    // Fix crypto code > ID
+    if (crypto === "eth") {
+      crypto = "ethereum";
+    } else if (crypto === "xrp") {
+      crypto = "ripple";
+    }
+    // Get Data
+    await axios
+      .get("https://api.coingecko.com/api/v3/simple/price", {
+        params: {
+          ids: crypto,
+          vs_currencies: currency,
+        },
+      })
+      .then((response) => {
+        bkg.console.log(response);
+        // Check data is returned
+        if (Object.keys(response.data).length === 0) {
+          throw Error(`No data found for ${crypto} > ${currency} pair`);
+        } else {
+          Object.assign(priceData, response.data);
+        }
+      });
+  } catch (error) {
+    bkg.console.log(error);
+    displayMessage(error, "error");
+  }
+}
+
+// Function to display a message for 2 seconds
+function displayMessage(text, type) {
+  messagesDiv.textContent = text;
+  messagesDiv.classList.add(`msg-${type}`);
+
+  setTimeout(() => {
+    messagesDiv.textContent = "";
+    messagesDiv.classList.remove(`msg-${type}`);
+  }, 2000);
 }
 
 
 // Start the app
 init();
-
