@@ -1,24 +1,33 @@
 "use strict";
 
+// Import axios as the HTTP request handler
+import axios from "../node_modules/axios";
+
 /* Overview of local storage values stored in object
 const myInfo = {
-  "crypto1": "eth",
-  "currency1": "usd",
-  "crypto2": "xrp",
-  "currency2": "usd",
+  crypto1: "eth",
+  currency1: "usd",
+  crypto2: "xrp",
+  currency2: "usd",
 };
 localStorage.setItem("myInfo", JSON.stringify(myInfo));
 */
 
+// Lookup between Crypto currency codes and CoinGecko API IDS
+const cryptoCodes = {
+  eth : "ethereum",
+  xrp : "ripple",
 
-// Import axios as the HTTP request handler
-import axios from "../node_modules/axios";
+  getKey(ID) {
+    return Object.keys(this).find(key => this[key] === ID);
+  }
+};
+
+// Initialise Price Data
+let priceData = {};
 
 // Get Console Log Background Page
 const bkg = chrome.extension.getBackgroundPage();
-
-// Initialise Price Data
-let priceData = [];
 
 // Get the HTML elements to manipulate
 // Form Fields
@@ -65,10 +74,10 @@ function handleSubmit(event) {
   event.preventDefault();
   // Prepare input data and store to Local Storage
   const myInfo = {
-    "crypto1": crypto1.value.toLowerCase(),
-    "currency1": currency1.value.toLowerCase(),
-    "crypto2": crypto2.value.toLowerCase(),
-    "currency2": currency2.value.toLowerCase(),
+    crypto1: crypto1.value.toLowerCase(),
+    currency1: currency1.value.toLowerCase(),
+    crypto2: crypto2.value.toLowerCase(),
+    currency2: currency2.value.toLowerCase(),
   };
   localStorage.setItem("myInfo", JSON.stringify(myInfo));
   // Get Data and show results
@@ -81,6 +90,7 @@ function handleSubmit(event) {
 function reset(event) {
   event.preventDefault();
   localStorage.removeItem("myInfo");
+  results.innerHTML = "<p>No Data to Display.</p>";
   init();
 }
 
@@ -91,7 +101,14 @@ async function displayInfo(data) {
     await getPrice(data.crypto1, data.currency1);
     await getPrice(data.crypto2, data.currency2);
     // bkg.console.log(priceData);
-    // UP TO HERE
+    if (Object.keys(priceData).length > 0) {
+      const resultsHTML = `<h2>Current Prices:</h2>
+        <p>${data.crypto1.toUpperCase()} > ${data.currency1.toUpperCase()}: ${priceData[cryptoCodes[data.crypto1]][data.currency1]}</p>
+        <p>${data.crypto2.toUpperCase()} > ${data.currency2.toUpperCase()}: ${priceData[cryptoCodes[data.crypto2]][data.currency2]}</p>
+      `;
+      // bkg.console.log(resultsHTML);
+      results.innerHTML = resultsHTML;
+    }
   } catch (error) {
     bkg.console.log(error);
     displayMessage(error, "error");
@@ -104,16 +121,15 @@ async function displayInfo(data) {
 async function getPrice(crypto, currency) {
   try {
     // Fix crypto code > ID
-    if (crypto === "eth") {
-      crypto = "ethereum";
-    } else if (crypto === "xrp") {
-      crypto = "ripple";
+    const cryptoID = cryptoCodes[crypto];
+    if (!cryptoID) {
+      throw Error(`No lookup found for Crypto Code ${crypto}`);
     }
     // Get Data
     await axios
       .get("https://api.coingecko.com/api/v3/simple/price", {
         params: {
-          ids: crypto,
+          ids: cryptoID,
           vs_currencies: currency,
         },
       })

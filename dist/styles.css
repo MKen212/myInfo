@@ -28,6 +28,10 @@ body {
   display: none;
 }
 
+.results {
+  font-size: larger;
+}
+
 .messages {
   text-align: center;
 }
